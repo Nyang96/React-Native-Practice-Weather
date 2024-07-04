@@ -27,7 +27,7 @@ interface TodayDate {
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const API_KEY = 'bd19d67edadc9b31b5a2018dc9fb27e1'
+const API_KEY = ''
 
 export default function Index() {
   const [city, setCity] = useState<string | null>('...Loading')
