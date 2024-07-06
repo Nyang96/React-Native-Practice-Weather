@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Text, View, StyleSheet, ScrollView, Dimensions, ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import axios from 'axios'
-
 import * as Location from 'expo-location'
+import { Feather } from '@expo/vector-icons'
+import axios from 'axios'
 
 interface DaysData {
   dt_txt: string
@@ -25,9 +25,18 @@ interface TodayDate {
   date: string
   weekDay: string
 }
+type IconNameTypes = 'sun' | 'cloud' | 'cloud-snow' | 'cloud-rain' | 'cloud-drizzle' | 'cloud-lightning'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const API_KEY = ''
+const API_KEY = 'bd19d67edadc9b31b5a2018dc9fb27e1'
+const Icons: { [key: string]: string } = {
+  Clear: 'sun',
+  Clouds: 'cloud',
+  Snow: 'cloud-snow',
+  Rain: 'cloud-rain',
+  Drizzle: 'cloud-drizzle',
+  Thunderstorm: 'cloud-lightning',
+}
 
 export default function Index() {
   const [city, setCity] = useState<string | null>('...Loading')
@@ -83,7 +92,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" backgroundColor="#e0e0e0" />
+      <StatusBar style="light" backgroundColor="#708090" />
       <View style={styles.city}>
         <Text style={styles.cityText}>{city}</Text>
       </View>
@@ -93,7 +102,7 @@ export default function Index() {
       </View>
       <View style={styles.weatherContainer}>
         {days.length === 0 ? (
-          <ActivityIndicator size="large" color="#888" />
+          <ActivityIndicator size="large" color="#fff" />
         ) : (
           <ScrollView
             horizontal
@@ -106,11 +115,16 @@ export default function Index() {
                 main: { temp, temp_max, temp_min, humidity },
                 wind: { speed },
               } = day
+              const weatherIcon = Icons[day.weather[0].main] as IconNameTypes
+
               return (
                 <View key={index} style={styles.dayWeather}>
                   <View style={styles.weatherPrev}>
                     <Text style={styles.temp}>{temp.toFixed(0)}℃</Text>
                     <Text style={styles.description}>{day.weather[0].main}</Text>
+                    <View style={{ flex: 2.5, alignItems: 'flex-end', paddingTop: 30, paddingRight: 50 }}>
+                      <Feather name={weatherIcon} size={120} color="#708090" />
+                    </View>
                   </View>
                   <View style={styles.weatherDetail}>
                     <View>
@@ -135,7 +149,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#708090',
   },
   city: {
     flex: 1,
@@ -145,6 +159,7 @@ const styles = StyleSheet.create({
   cityText: {
     fontSize: 42,
     fontWeight: '600',
+    color: '#fff',
   },
   date: {
     flex: 2,
@@ -154,10 +169,12 @@ const styles = StyleSheet.create({
   dateMonth: {
     fontSize: 36,
     fontWeight: '600',
+    color: '#fff',
   },
   dateWeek: {
     marginTop: 10,
     fontSize: 24,
+    color: '#fff',
   },
   weatherContainer: {
     flex: 5,
@@ -175,15 +192,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 30,
     marginRight: 30,
-    borderTopWidth: 3,
-    borderBottomWidth: 3,
+    paddingLeft: 15,
+    backgroundColor: '#f8f8ff',
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
   },
   temp: {
+    flex: 2,
     fontSize: 130,
     fontWeight: '700',
+    color: '#708090',
   },
   description: {
+    flex: 0.8,
     fontSize: 36,
+    color: '#708090',
   },
   weatherDetail: {
     flex: 1.3,
@@ -194,8 +219,10 @@ const styles = StyleSheet.create({
   weatherBoldText: {
     fontWeight: '600',
     fontSize: 20,
+    color: '#fff',
   },
   weatherText: {
     fontSize: 20,
+    color: '#fff',
   },
 })
